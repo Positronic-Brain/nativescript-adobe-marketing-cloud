@@ -23,4 +23,5 @@ export declare class AdobeAnalytics extends AdobeAnalyticsCommon {
     trackLocation(location: any, additional: { [key: string]: any; }): void;
     optIn(): void;
     optOut(): void;
+    setPushIdentifier(deviceIdentifier: any): void;
 }

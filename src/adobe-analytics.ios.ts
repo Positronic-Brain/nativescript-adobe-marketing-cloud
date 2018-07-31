@@ -54,4 +54,8 @@ export class AdobeAnalytics extends AdobeAnalyticsCommon {
     public optOut(): void {
         ADBMobile.setPrivacyStatus(ADBMobilePrivacyStatus.OptOut);
     }
+
+    public setPushIdentifier(deviceIdentifier: NSData): void {
+        ADBMobile.setPushIdentifier(deviceIdentifier);
+    }
 }

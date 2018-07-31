@@ -24,4 +24,5 @@ export abstract class AdobeAnalyticsCommon {
     public abstract trackLocation(location: any, additional: { [key: string]: any; }): void;
     public abstract optIn(): void;
     public abstract optOut(): void;
+    public abstract setPushIdentifier(deviceIdentifier: any): void;
 }
