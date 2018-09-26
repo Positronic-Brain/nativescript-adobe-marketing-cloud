@@ -1,4 +1,5 @@
 import { AdobeAnalyticsCommon } from './adobe-analytics.common';
+import { AdobeAnalyticsUtils } from './adobe-analytics.utils';
 
 export class AdobeAnalytics extends AdobeAnalyticsCommon {
     protected static _instance: AdobeAnalyticsCommon = new AdobeAnalytics();
@@ -55,7 +56,15 @@ export class AdobeAnalytics extends AdobeAnalyticsCommon {
         ADBMobile.setPrivacyStatus(ADBMobilePrivacyStatus.OptOut);
     }
 
-    public setPushIdentifier(deviceIdentifier: NSData): void {
-        ADBMobile.setPushIdentifier(deviceIdentifier);
+    /**
+     * If `deviceIdentifier` is a string, this method assumes it's an HEX string. In order to create an
+     * NSData object out of that we need to convert it first to a base64 string.
+     * @param deviceIdentifier
+     */
+    public setPushIdentifier(deviceIdentifier: NSData | string): void {
+        ADBMobile.setPushIdentifier(typeof deviceIdentifier === 'string' ? new NSData({
+            base64EncodedString: AdobeAnalyticsUtils.hexToBase64(deviceIdentifier),
+            options: null,
+        }) : deviceIdentifier);
     }
 }
