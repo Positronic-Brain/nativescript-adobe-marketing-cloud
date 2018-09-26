@@ -51,6 +51,10 @@ export class AdobeAnalytics extends AdobeAnalyticsCommon {
         com.adobe.mobile.Config.setPrivacyStatus(com.adobe.mobile.MobilePrivacyStatus.MOBILE_PRIVACY_STATUS_OPT_OUT);
     }
 
+    public setPushIdentifier(deviceIdentifier: string): void {
+        com.adobe.mobile.Config.setPushIdentifier(deviceIdentifier);
+    }
+
     private convertToHashMap(dictionary: { [key: string]: any } = {}): java.util.Map<string, Object> {
         return Object.keys(dictionary)
             .reduce((result, key) => {

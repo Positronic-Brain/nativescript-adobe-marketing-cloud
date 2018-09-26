@@ -24,4 +24,5 @@ export declare abstract class AdobeAnalyticsCommon {
     }): void;
     abstract optIn(): void;
     abstract optOut(): void;
+    abstract setPushIdentifier(deviceIdentifier: any): void;
 }

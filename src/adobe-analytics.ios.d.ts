@@ -23,4 +23,5 @@ export declare class AdobeAnalytics extends AdobeAnalyticsCommon {
     }): void;
     optIn(): void;
     optOut(): void;
+    setPushIdentifier(deviceIdentifier: NSData): void;
 }

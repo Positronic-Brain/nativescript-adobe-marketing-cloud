@@ -24,4 +24,5 @@ export declare class AdobeAnalytics extends AdobeAnalyticsCommon {
     optOut(): void;
     private convertToHashMap(dictionary?);
     visitorAppendToURL(url: string): string;
+    setPushIdentifier(deviceIdentifier: string): void;
 }
