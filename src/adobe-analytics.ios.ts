@@ -1,5 +1,5 @@
 import { AdobeAnalyticsCommon } from './adobe-analytics.common';
-import { AdobeAnalyticsUtils } from './adobe-analytics.utils';
+import { AdobeAnalyticsUtils } from './lib/adobe-analytics.utils';
 
 export class AdobeAnalytics extends AdobeAnalyticsCommon {
     protected static _instance: AdobeAnalyticsCommon = new AdobeAnalytics();
