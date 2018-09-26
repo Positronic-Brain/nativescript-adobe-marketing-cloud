@@ -7,29 +7,22 @@ export class AdobeAnalyticsUtils {
             throw new Error('The length of the HEX value should be even.');
         }
 
-        const decimals: number[] = [];
-
-        for (let i = 0; i < hexSize; i += 2) {
-            // Each pair of hex characters (00 - FF) is a decimal value from 0 to 255:
-            decimals.push(parseInt(hex.substr(i, 2), 16));
-        }
-
         let base64: string = '';
 
-        // Group decimals in packs of 3 to create 4 base64 characters and forget for now about the
-        // non-aligned decimals (1 or 2 decimals at the end of the decimals array if its length is not
-        // multiple of 3):
+        // Every 2 characters in hex (00 - FF) make one decimal number (0-255).
+        // Then, decimals are grouped in packs of 3 to create 4 base64 characters. That means on each
+        // iteration we take care of 6 characters at a time, ignoring the trailing ones that are not aligned
+        // (not multiple of 6), that is, the last 2 or 4 characters (1 or 2 decimals):
 
         const CHARSET: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
 
-        const decimalsSize: number = hexSize / 2;
-        const remainingElements: number = decimalsSize % 3;
-        const lastAlignedIndexPlusOne: number = decimalsSize - remainingElements;
+        const remainingCharacters: number = hexSize % 6;
+        const lastAlignedIndexPlusOne: number = hexSize - remainingCharacters;
 
-        for (let i = 0; i < lastAlignedIndexPlusOne; i += 3) {
-            const dec0: number = decimals[i];
-            const dec1: number = decimals[i + 1];
-            const dec2: number = decimals[i + 2];
+        for (let i = 0; i < lastAlignedIndexPlusOne; i += 6) {
+            const dec0: number = parseInt(hex.substr(i, 2), 16);
+            const dec1: number = parseInt(hex.substr(i + 2, 2), 16);
+            const dec2: number = parseInt(hex.substr(i + 4, 2), 16);
 
             base64 += `${
                 CHARSET.charAt((dec0 & 0xfc) >> 2)
@@ -42,20 +35,22 @@ export class AdobeAnalyticsUtils {
             }`;
         }
 
-        // Handle the remaining non-aligned decimals, if any (there can be only 1 or 2 of them):
+        // Handle the remaining non-aligned characters, if any (there can be only 2 or 4 of them, which
+        // would translate to 1 or 2 decimals):
 
-        if (remainingElements) {
-            const dec0: number = decimals[lastAlignedIndexPlusOne];
-            const dec1: number = decimals[lastAlignedIndexPlusOne + 1] || 0;
+        if (remainingCharacters) {
+            const dec0: number = parseInt(hex.substr(lastAlignedIndexPlusOne, 2), 16);
+            const dec1: number = parseInt(hex.substr(lastAlignedIndexPlusOne + 2, 2), 16) || 0;
 
-            // Append the last 2-3 characters + 1-2 padding (=), so 4 more characters in total:
+            // Append the last 2 or 3 characters + 2 or 1 padding (=), respectively, so 4 more
+            // characters in total:
 
             base64 += `${
                 CHARSET.charAt((dec0 & 0xfc) >> 2)
             }${
                 CHARSET.charAt(((dec0 & 0x03) << 4) + ((dec1 & 0xf0) >> 4))
             }${
-                remainingElements === 2 ? CHARSET.charAt((dec1 & 0x0f) << 2) : '='
+                remainingCharacters === 4 ? CHARSET.charAt((dec1 & 0x0f) << 2) : '='
             }=`;
         }
 
